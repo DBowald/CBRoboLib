@@ -7,6 +7,10 @@
 //
 
 #include "CBRobotLib.h"
+#include "Arduino.h"
+
+int pwmStoreLeft = 0;
+int pwmStoreRight = 0;
 
 Robot::Robot()
 {
@@ -31,8 +35,8 @@ void Robot::drive(int velLeft, int velRight)
         analogWrite(5, pwmLeft);
         analogWrite(6, pwmRight);
         
-        int pwmStoreLeft = pwmLeft;
-        int pwmStoreRight = pwmRight;
+        pwmStoreLeft = pwmLeft;
+        pwmStoreRight = pwmRight;
     }
     
     else if((velLeft <= 0) && (velRight > 0))           //Left
@@ -45,8 +49,8 @@ void Robot::drive(int velLeft, int velRight)
         analogWrite(5, pwmLeft);
         analogWrite(6, pwmRight);
         
-        int pwmStoreLeft = pwmLeft;
-        int pwmStoreRight = pwmRight;
+        pwmStoreLeft = pwmLeft;
+        pwmStoreRight = pwmRight;
     }
     
     else if((velLeft > 0) && (velRight <= 0))           //Right (same suggestions as above)
@@ -59,8 +63,8 @@ void Robot::drive(int velLeft, int velRight)
         analogWrite(5, pwmLeft);
         analogWrite(6, pwmRight);
         
-        int pwmStoreLeft = pwmLeft;
-        int pwmStoreRight = pwmRight;
+        pwmStoreLeft = pwmLeft;
+        pwmStoreRight = pwmRight;
     }
     
     else if((velLeft < 0) && (velRight < 0))            //Backward
@@ -73,18 +77,18 @@ void Robot::drive(int velLeft, int velRight)
         analogWrite(5, pwmLeft);
         analogWrite(6, pwmRight);
         
-        int pwmStoreLeft = pwmLeft;
-        int pwmStoreRight = pwmRight;
+        pwmStoreLeft = pwmLeft;
+        pwmStoreRight = pwmRight;
     }
     
     else                                                //Stop
     {
-        for(int i = 0, i <= pwmStoreLeft, i++)          // this -> analogWrite(6, (pwmStoreRight - j)); should be able to go in the same loop as pwmStore Left ??
+        for(int i = 0; i <= pwmStoreLeft; i++)          // this -> analogWrite(6, (pwmStoreRight - j)); should be able to go in the same loop as pwmStore Left ??
         {
             analogWrite(5, (pwmStoreLeft - i));
         }
         
-        for(int j = 0, j <= pwmStoreRight, j++)
+        for(int j = 0; j <= pwmStoreRight; j++)
         {
             analogWrite(6, (pwmStoreRight - j));
         }

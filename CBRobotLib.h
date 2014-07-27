@@ -9,7 +9,7 @@
 #ifndef ____CBRobotLib__
 #define ____CBRobotLib__
 
-#include "WProgram.h"
+#include "Arduino.h"
 
 class Robot
 {
