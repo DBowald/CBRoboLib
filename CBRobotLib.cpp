@@ -9,15 +9,15 @@
 #include "CBRobotLib.h"
 #include "Arduino.h"
 
-int pwmStoreLeft = 0;
+int pwmStoreLeft = 0;                                   //PWM store for use in slow down loops
 int pwmStoreRight = 0;
 
 Robot::Robot()
 {
-    pinMode(3, OUTPUT);                                 //Left
-    pinMode(4, OUTPUT);
     pinMode(7, OUTPUT);                                 //Right
     pinMode(8, OUTPUT);
+    pinMode(9, OUTPUT);                                 //Left
+    pinMode(10, OUTPUT);
 }
 
 void Robot::drive(int velLeft, int velRight)
@@ -26,39 +26,67 @@ void Robot::drive(int velLeft, int velRight)
     int pwmRight = map(abs(velRight), 0, 100, 40, 200);
     
     if((velLeft > 0) && (velRight > 0))                 //Forward
-    {                                                   //Do we want it to be velLeft > 0 && velLeft == velRight?
-        digitalWrite(3, HIGH);                          //Adjust HIGH/LOW at a later date
-        digitalWrite(4, LOW);
-        digitalWrite(7, HIGH);
-        digitalWrite(8, LOW);
-        
-        analogWrite(5, pwmLeft);
-        analogWrite(6, pwmRight);
-        
-        pwmStoreLeft = pwmLeft;
-        pwmStoreRight = pwmRight;
-    }
-    
-    else if((velLeft <= 0) && (velRight > 0))           //Left
-    {                                                   //To add to above comment, lets make it velRight > velLeft, so that way robot can still move forward and turn?
-        digitalWrite(3, LOW);
-        digitalWrite(4, HIGH);
-        digitalWrite(7, HIGH);
-        digitalWrite(8, LOW);
-        
-        analogWrite(5, pwmLeft);
-        analogWrite(6, pwmRight);
-        
-        pwmStoreLeft = pwmLeft;
-        pwmStoreRight = pwmRight;
-    }
-    
-    else if((velLeft > 0) && (velRight <= 0))           //Right (same suggestions as above)
     {
-        digitalWrite(3, HIGH);
-        digitalWrite(4, LOW);
+        digitalWrite(7, HIGH);
+        digitalWrite(8, LOW);
+        digitalWrite(9, HIGH);
+        digitalWrite(10, LOW);
+        
+        analogWrite(5, pwmLeft);
+        analogWrite(6, pwmRight);
+        
+        pwmStoreLeft = pwmLeft;
+        pwmStoreRight = pwmRight;
+    }
+    
+    else if((velLeft <= 0) && (velRight > 0))           //Forward Left
+    {
+        digitalWrite(7, HIGH);
+        digitalWrite(8, LOW);
+        digitalWrite(9, LOW);
+        digitalWrite(10, HIGH);
+        
+        analogWrite(5, pwmLeft);
+        analogWrite(6, pwmRight);
+        
+        pwmStoreLeft = pwmLeft;
+        pwmStoreRight = pwmRight;
+    }
+    
+    else if((velLeft > 0) && (velRight <= 0))           //Forward Right
+    {
         digitalWrite(7, LOW);
         digitalWrite(8, HIGH);
+        digitalWrite(9, HIGH);
+        digitalWrite(10, LOW);
+        
+        analogWrite(5, pwmLeft);
+        analogWrite(6, pwmRight);
+        
+        pwmStoreLeft = pwmLeft;
+        pwmStoreRight = pwmRight;
+    }
+    
+    else if((velLeft >= 0) && (velRight < 0))           //Reverse Left
+    {
+        digitalWrite(7, LOW);
+        digitalWrite(8, HIGH);
+        digitalWrite(9, HIGH);
+        digitalWrite(10, LOW);
+        
+        analogWrite(5, pwmLeft);
+        analogWrite(6, pwmRight);
+        
+        pwmStoreLeft = pwmLeft;
+        pwmStoreRight = pwmRight;
+    }
+    
+    else if((velLeft < 0) && (velRight >= 0))           //Reverse Right
+    {
+        digitalWrite(7, HIGH);
+        digitalWrite(8, LOW);
+        digitalWrite(9, LOW);
+        digitalWrite(10, HIGH);
         
         analogWrite(5, pwmLeft);
         analogWrite(6, pwmRight);
@@ -68,11 +96,11 @@ void Robot::drive(int velLeft, int velRight)
     }
     
     else if((velLeft < 0) && (velRight < 0))            //Backward
-    {                                                   //Try velLeft < 0 && velLeft = velRight?
-        digitalWrite(3, LOW);
-        digitalWrite(4, HIGH);
+    {
         digitalWrite(7, LOW);
         digitalWrite(8, HIGH);
+        digitalWrite(9, LOW);
+        digitalWrite(10, HIGH);
         
         analogWrite(5, pwmLeft);
         analogWrite(6, pwmRight);
@@ -83,7 +111,7 @@ void Robot::drive(int velLeft, int velRight)
     
     else                                                //Stop
     {
-        for(int i = 0; i <= pwmStoreLeft; i++)          // this -> analogWrite(6, (pwmStoreRight - j)); should be able to go in the same loop as pwmStore Left ??
+        for(int i = 0; i <= pwmStoreLeft; i++)          //Loops allow for a slower (less abrupt) stop
         {
             analogWrite(5, (pwmStoreLeft - i));
         }
