@@ -22,8 +22,8 @@ Robot::Robot()
 
 void Robot::drive(int velLeft, int velRight)
 {
-    int pwmLeft = map(abs(velLeft), 0, 100, 40, 200);   //Limit PWM to max of 200/255 and min of 40/255
-    int pwmRight = map(abs(velRight), 0, 100, 40, 200);
+    int pwmLeft = map(abs(velLeft), 0, 100, 0, 200);   //Limit PWM to max of 200/255 and min of 0/255
+    int pwmRight = map(abs(velRight), 0, 100, 0, 200);
     
     if((velLeft > 0) && (velRight > 0))                 //Forward
     {
